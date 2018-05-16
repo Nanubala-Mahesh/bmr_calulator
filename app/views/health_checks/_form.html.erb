@@ -1,0 +1,171 @@
+<%= form_with(model: health_check, local: true) do |form| %>
+  
+  <span id="req_fields"></span>
+
+  <% if health_check.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(health_check.errors.count, "error") %> prohibited this health_check from being saved:</h2>
+
+      <ul>
+      <% health_check.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :health_check_name, onblur: "keepFocus(this.id)" %>
+    <span id="show_error"></span>
+  </div>
+
+  <div class="field">
+    <%= form.label :age, "Age in Years" %>
+    <%= form.text_field :age, id: :health_check_age %>
+    
+  </div>
+
+  <div class="field">
+    <%= form.label :gender %>
+    <%#= form.text_field :gender, id: :health_check_gender %>
+    <select name="health_check[gender]" id=health_check_gender>
+      <option value=""></option>
+      <option value="male" selected="selected">Male</option>
+      <option value="female">FeMale</option>
+    </select>
+  </div>
+
+  <div class="field" >
+    <%= form.label :height %>
+    <%= form.number_field :height, id: :health_check_height %>
+    
+    <%#= form.label :height_in %>
+    <%#= form.text_field :height_in, id: :health_check_height_in %>
+    <select name="health_check[height_in]" id=health_check_height_in>
+      <option value=""></option>
+      <option value="cm" selected="selected">Centimeter</option>
+    </select>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :weight %>
+    <%= form.number_field :weight, id: :health_check_weight %>
+    <select name="health_check[weight_in]" id=health_check_weight_in >
+      <option value=""></option>
+      <option value="kg" selected="selected">Kilograms</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <%= form.label :daily_activity_level %>
+    <%#= form.text_field :daily_activity_level, id: :health_check_daily_activity_level %>
+    <select name="health_check[daily_activity_level]" id=health_check_daily_activity_level , onblur="calculate(value)">
+      <option value="1.2" selected="selected">Sedentary</option> 
+      <option value="1.375">Mild activity</option> 
+      <option value="1.55">Moderate activity</option> 
+      <option value="1.7">Heavy activity</option>
+      <option value="1.9">Very Heavy - Extreme</option>
+    </select>
+  </div>
+  <span id="wait"></span>
+
+  <div class="field">
+    <%#= form.label :calculated_BMR %>
+    <%= form.text_field :calculated_BMR, id: :health_check_calculated_BMR %>
+  </div>
+
+  <div class="field">
+    <%#= form.label :calculated_BMR %>
+    <%= form.text_field :estimated_cal_per_day, id: :estimated_cal_per_day %>
+  </div>
+
+
+  <div class="actions" >
+    <input type="submit" name="submit" value="submit" onClick = "validateForm(event);" />
+    <%#= form.submit_tag, onclick: "addrow();"  %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+
+  var health_check_age = document.getElementById('health_check_age');
+  var health_check_gender = document.getElementById('health_check_gender');
+
+  var health_check_height = document.getElementById('health_check_height');
+  var health_check_height_in = document.getElementById('health_check_height_in');
+
+  var health_check_weight = document.getElementById('health_check_weight');
+  var health_check_weight_in = document.getElementById('health_check_weight_in');
+
+  var daily_activity_level = document.getElementById('daily_activity_level') 
+  var health_check_calculated_BMR = document.getElementById('health_check_calculated_BMR') 
+
+
+  var health_check_daily_activity_level = document.getElementById('health_check_daily_activity_level');
+
+
+  function validateForm(event) {
+    if (health_check_weight.value == "",health_check_height.value == "",health_check_age.value == "" ) {
+      event.preventDefault();
+    }
+  }
+
+  var show_error
+  var current_id
+
+  function keepFocus(value_id) {
+    // console.log(value_id);
+    show_error = document.getElementById('show_error');
+    current_id = document.getElementById(value_id);
+    if (current_id.value == "") {
+      // id = value.target.id
+      // alert(id);
+      current_id.focus();
+      show_error.innerHTML = 'Should not be empty';
+    } else {
+      show_error.innerHTML = '';
+    }
+  }
+
+  function calculate(value) {
+    
+    document.getElementById('wait').innerHTML = "Calculated BMR as Follows "
+    document.getElementById('wait').style.color = 'green';
+
+    console.log(health_check_weight_in.value);
+
+    function calculate_men(weight, height, age) {
+      var bmr = 88.362 + ( 13.397 * weight  ) + ( 4.799 * height  ) - ( 5.677 * age  )
+      console.log(bmr.toFixed(1));
+
+      health_check_calculated_BMR.value =  bmr.toFixed(1);
+      var estimated_cal = bmr * health_check_daily_activity_level.value
+      alert("Your estimated Basal Metabolic Rate (BMR) is " + estimated_cal.toFixed(1) );  
+      var estimated_cal_per_day = document.getElementById('estimated_cal_per_day').value = estimated_cal.toFixed(1);
+    }
+
+    function calculate_women(weight, height, age) {
+      var bmr = 447.593 + ( 9.247 * weight ) + ( 3.098 * height ) - (4.330 * age ) 
+      console.log(bmr.toFixed(1)); 
+      health_check_calculated_BMR.value =  bmr.toFixed(1);
+      var estimated_cal = bmr * health_check_daily_activity_level.value
+      alert("Your estimated Basal Metabolic Rate (BMR) is " + estimated_cal.toFixed(1) );
+      var estimated_cal_per_day = document.getElementById('estimated_cal_per_day').value = estimated_cal.toFixed(1);
+    }
+
+  
+    if (health_check_weight.value != "",health_check_height.value != "",health_check_age.value != "" ) {
+      if (health_check_gender.value == "male") {
+        calculate_men(health_check_weight.value,health_check_height.value,health_check_age.value)
+      } else if (health_check_gender.value == "female") {
+        calculate_women(health_check_weight.value,health_check_height.value,health_check_age.value)
+      }
+    } else {
+      var req_fields = document.getElementById('req_fields');
+      req_fields.innerHTML = 'Should not be empty';
+    }
+  }
+</script>

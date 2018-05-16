@@ -1,0 +1,56 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @health_check.name %>
+</p>
+
+<p>
+  <strong>Age:</strong>
+  <%= @health_check.age %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @health_check.gender %>
+</p>
+
+<p>
+  <strong>Height:</strong>
+  <%= @health_check.height %>
+</p>
+
+<p>
+  <strong>Height in:</strong>
+  <%= @health_check.height_in %>
+</p>
+
+<p>
+  <strong>Weight:</strong>
+  <%= @health_check.weight %>
+</p>
+
+<p>
+  <strong>Weight in:</strong>
+  <%= @health_check.weight_in %>
+</p>
+
+<p>
+  <strong>Daily activity level:</strong>
+  <%= @health_check.daily_activity_level %>
+</p>
+
+<p>
+  <strong>Calculated bmr:</strong>
+  <%= @health_check.calculated_BMR %>
+</p>
+
+<p>
+  <strong>Estimated Calories per day:</strong>
+  <%= @health_check.estimated_cal_per_day %>
+</p>
+
+
+
+<%= link_to 'Edit', edit_health_check_path(@health_check) %> |
+<%= link_to 'Back', health_checks_path %>
